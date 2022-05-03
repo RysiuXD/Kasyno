@@ -9,16 +9,20 @@ namespace Kasyno.Controllers
 {
     public class BlackJackController : Controller
     {
-         BlackJackGame BlackJackGame = new BlackJackGame();
+       static  BlackJackGame BlackJackGame = new BlackJackGame();
         public IActionResult Index()
         {
             BlackJackGame.Rozdanie();
             BlackJackGame.LiczPunkty();
-            BlackJackGame.GameOutcome();
+          //  BlackJackGame.GameOutcome();
           return View("BlackJackGame", BlackJackGame);
         }
 
-        
+        public IActionResult Hit()
+        {
+            BlackJackGame.PlayerHit();
+            return View("BlackJackGame", BlackJackGame);
+        }
 
 
     }

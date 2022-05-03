@@ -11,6 +11,7 @@ namespace Kasyno.Classes
         public Talia Talia;
         public int PunktyGracz, PunktyDealera;
         public string Komunikat;
+        public bool GameOver;
 
         public BlackJackGame() 
         {
@@ -19,6 +20,7 @@ namespace Kasyno.Classes
             DealerHand = new List<Karta>();
             Talia = new Talia();
             Talia.Tasuj();
+            GameOver = false;
         }
         
         public void PlayerDodajKarte()
@@ -36,6 +38,7 @@ namespace Kasyno.Classes
 
         public void Rozdanie()
         {
+            GameOver = false;
             ZbierzKarty();
             DealerDodajKarte();
             DealerDodajKarte();
@@ -93,21 +96,30 @@ namespace Kasyno.Classes
         public void GameOutcome()
         {
             LiczPunkty();
-            if (PunktyGracz > 21) { Komunikat="Gracz Przegrywa"; }
+            if (PunktyGracz > 21) { Komunikat="Gracz Przegrywa";  GameOver = true; }
             else
             {
-                if(PunktyDealera > 21) { Komunikat = "Gracz Wygrywa"; }
+                if(PunktyDealera > 21) { Komunikat = "Gracz Wygrywa"; GameOver = true; }
                     else
                     {
-                        if (PunktyDealera < PunktyGracz) { Komunikat = "Gracz Wygrywa"; }
+                        if (PunktyDealera < PunktyGracz) { Komunikat = "Gracz Wygrywa"; GameOver = true; }
                         else
                         {
-                            if (PunktyGracz < PunktyDealera) { Komunikat = "Gracz Pzegrywa"; } else { Komunikat = "Remis"; };
+                            if (PunktyGracz < PunktyDealera) { Komunikat = "Gracz Pzegrywa"; GameOver = true; } else { Komunikat = "Remis"; GameOver = true; };
                         }
                     }
-                }
             }
+        }
 
+
+
+
+        public void PlayerHit()
+        {
+            PlayerDodajKarte();
+            LiczPunkty();
+            if (PunktyGracz > 21) GameOutcome();
+        }
     }
 }
 

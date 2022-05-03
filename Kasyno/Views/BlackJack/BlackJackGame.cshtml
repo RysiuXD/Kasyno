@@ -37,4 +37,22 @@
         }
     </div>
       </div>
-        </div>
+      <br />
+    @if (!Model.GameOver)
+    {
+    <div class="row">
+            <div class="col">
+            <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="HIT">Hit</a></button>
+            </div>
+      </div>       
+    }
+    else
+    {
+     <div class="row">
+      <button type="button" class="btn btn-secondary btn-block">
+         <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="Index">Nowe Rozdanie</a>
+      </button>
+     </div>
+    }
+ 
+</div>
