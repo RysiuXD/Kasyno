@@ -13,6 +13,8 @@ namespace Kasyno.Controllers
         public IActionResult Index()
         {
             BlackJackGame.Rozdanie();
+            BlackJackGame.LiczPunkty();
+            BlackJackGame.GameOutcome();
           return View("BlackJackGame", BlackJackGame);
         }
 
