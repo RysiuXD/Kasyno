@@ -22,7 +22,7 @@ namespace Kasyno.Classes
         }
         public void Tasuj()
         {
-            for (int i = 0; i < 101; i++)
+            for (int i = 0; i < 10001; i++)
             {
                 var rnd = new Random();
                 var TasowanaKarta = Karty[rnd.Next(0, Karty.Count())];

@@ -1,0 +1,39 @@
+﻿@using Kasyno.Classes
+@model Kasyno.Classes.BlackJackGame;
+
+@{
+    ViewData["Title"] = "Game";
+}
+
+<div class="container-fluid">
+    <div  class="row">>
+        <h1> reka dealera</h1>
+    <div class="d-flex justify-content-end border border-dark justify-content-center">
+         @foreach (Karta karta in Model.DealerHand)
+          {
+          <div class="p-2 bg-light border border-dark">
+          <h1 style="color:@karta.TxtColor"> @karta.GetFace() </h1>
+          </div>
+          }      
+    </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col" style=" font-size:20px; text-align:center; min-height:50%">
+            <div> -------------</div>
+        </div>
+    </div>
+    <br />
+      <div  class="row">>
+        <h1> reka gracza</h1>
+    <div class="d-flex justify-content-end border border-dark justify-content-center">
+
+        @foreach (Karta karta in Model.PlayerHand)
+        {
+            <div class="d-inline-flex p-2 bg-light border border-dark">
+                <h1 style="color:@karta.TxtColor"> @karta.GetFace() </h1>
+            </div>
+        }
+    </div>
+      </div>
+        </div>
