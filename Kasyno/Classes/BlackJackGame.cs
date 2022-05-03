@@ -38,6 +38,7 @@ namespace Kasyno.Classes
 
         public void Rozdanie()
         {
+            Komunikat = "Dealer dobiera do 16";
             GameOver = false;
             ZbierzKarty();
             DealerDodajKarte();
@@ -111,15 +112,19 @@ namespace Kasyno.Classes
             }
         }
 
-
-
-
         public void PlayerHit()
         {
             PlayerDodajKarte();
             LiczPunkty();
             if (PunktyGracz > 21) GameOutcome();
         }
+
+        public void PlayerStays()
+        {
+            GameOver = true;
+            GameOutcome();
+        }
+
     }
 }
 

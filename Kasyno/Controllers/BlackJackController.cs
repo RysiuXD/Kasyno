@@ -24,6 +24,11 @@ namespace Kasyno.Controllers
             return View("BlackJackGame", BlackJackGame);
         }
 
+        public IActionResult Stay()
+        {
+            BlackJackGame.PlayerStays();
+            return View("BlackJackGame", BlackJackGame);
+        }
 
     }
 }
