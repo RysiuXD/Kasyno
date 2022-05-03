@@ -9,12 +9,24 @@
     <div  class="row">>
         <h1> reka dealera</h1>
     <div class="d-flex justify-content-end border border-dark justify-content-center">
-         @foreach (Karta karta in Model.DealerHand)
-          {
-          <div class="p-2 bg-light border border-dark">
-          <h1 style="color:@karta.TxtColor"> @karta.GetFace() </h1>
-          </div>
-          }      
+         @if (!Model.GameOver)
+            {
+               <div class="p-2 bg-light border border-dark">
+                 <h1 style="color:@Model.DealerHand[0].TxtColor"> @Model.DealerHand[0].GetFace() </h1>
+               </div>
+               <div class="d-inline-flex p-2 border border-dark" style="background-color: #114c0f">
+                 <h1 style="color:#114c0f">___</h1>
+               </div>
+            }
+          else
+             {
+             @foreach (Karta karta in Model.DealerHand)
+                {
+                  <div class="p-2 bg-light border border-dark">
+                    <h1 style="color:@karta.TxtColor"> @karta.GetFace() </h1>
+                  </div>
+                }
+             }
     </div>
     </div>
     <br />

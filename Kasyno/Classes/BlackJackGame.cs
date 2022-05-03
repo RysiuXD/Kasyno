@@ -96,6 +96,7 @@ namespace Kasyno.Classes
 
         public void GameOutcome()
         {
+            GameOver = true;
             LiczPunkty();
             if (PunktyGracz > 21) { Komunikat="Gracz Przegrywa";  GameOver = true; }
             else
@@ -122,9 +123,15 @@ namespace Kasyno.Classes
         public void PlayerStays()
         {
             GameOver = true;
+            DealerLogic();
             GameOutcome();
         }
 
+        public void DealerLogic()
+        {
+            while ((PunktyDealera < 16) && ((PunktyDealera < PunktyGracz) && (PunktyGracz <= 21))) { DealerDodajKarte(); LiczPunkty(); }
+
+        }
     }
 }
 
