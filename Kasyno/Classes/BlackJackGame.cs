@@ -11,7 +11,7 @@ namespace Kasyno.Classes
         public Talia Talia;
         public int PunktyGracz, PunktyDealera, Zetony, BetSize;
         public string Komunikat;
-        public bool GameOver;
+        public bool GameOver, FirstAction;
 
         public BlackJackGame() 
         {
@@ -21,6 +21,7 @@ namespace Kasyno.Classes
             Talia = new Talia();
             Talia.Tasuj();
             GameOver = false;
+            FirstAction = true;
             Zetony = 200;
             BetSize = 10;
         }
@@ -42,11 +43,15 @@ namespace Kasyno.Classes
         {
             Komunikat = "Dealer dobiera do 16";
             GameOver = false;
+            FirstAction = true;
+            BetSize = 10;
             ZbierzKarty();
             DealerDodajKarte();
             DealerDodajKarte();
             PlayerDodajKarte();
             PlayerDodajKarte();
+            LiczPunkty();
+            BlackJackCheck();
         }
 
 
@@ -117,6 +122,7 @@ namespace Kasyno.Classes
 
         public void PlayerHit()
         {
+            FirstAction = false;
             PlayerDodajKarte();
             LiczPunkty();
             if (PunktyGracz > 21) GameOutcome();
@@ -124,9 +130,28 @@ namespace Kasyno.Classes
 
         public void PlayerStays()
         {
+            FirstAction = false;
             GameOver = true;
             DealerLogic();
             GameOutcome();
+        }
+
+        public void PlayerDoubleDown()
+        {
+
+            if (FirstAction)
+            {
+                FirstAction = false;
+                if (Zetony >= (2 * BetSize)) { BetSize = (BetSize * 2); PlayerDodajKarte(); PlayerStays(); }
+                else { Komunikat = "Masz zbyt mało żetonów!"; }
+
+            }
+            else { Komunikat = "DoubleDown moze zostac wykonany tylko na początku gry!"; }
+        }
+
+        public void BlackJackCheck()
+        {
+            if (FirstAction&&PunktyGracz==21){ Komunikat = $"Masz BlackJack-a Wygrałeś {((BetSize / 2) * 3)} żetonów!"; Zetony += ((BetSize / 2) * 3); GameOver = true; }
         }
 
         public void DealerLogic()
