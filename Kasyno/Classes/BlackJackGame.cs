@@ -9,7 +9,7 @@ namespace Kasyno.Classes
     {
         public List<Karta> PlayerHand, DealerHand;
         public Talia Talia;
-        public int PunktyGracz, PunktyDealera;
+        public int PunktyGracz, PunktyDealera, Zetony, BetSize;
         public string Komunikat;
         public bool GameOver;
 
@@ -21,6 +21,8 @@ namespace Kasyno.Classes
             Talia = new Talia();
             Talia.Tasuj();
             GameOver = false;
+            Zetony = 200;
+            BetSize = 10;
         }
         
         public void PlayerDodajKarte()
@@ -98,16 +100,16 @@ namespace Kasyno.Classes
         {
             GameOver = true;
             LiczPunkty();
-            if (PunktyGracz > 21) { Komunikat="Gracz Przegrywa";  GameOver = true; }
+            if (PunktyGracz > 21) { Komunikat="Gracz Przegrywa";  GameOver = true; Przegrana(); }
             else
             {
-                if(PunktyDealera > 21) { Komunikat = "Gracz Wygrywa"; GameOver = true; }
+                if(PunktyDealera > 21) { Komunikat = "Gracz Wygrywa"; GameOver = true;  Wygrana(); }
                     else
                     {
-                        if (PunktyDealera < PunktyGracz) { Komunikat = "Gracz Wygrywa"; GameOver = true; }
+                        if (PunktyDealera < PunktyGracz) { Komunikat = "Gracz Wygrywa"; GameOver = true; Wygrana(); }
                         else
                         {
-                            if (PunktyGracz < PunktyDealera) { Komunikat = "Gracz Pzegrywa"; GameOver = true; } else { Komunikat = "Remis"; GameOver = true; };
+                            if (PunktyGracz < PunktyDealera) { Komunikat = "Gracz Pzegrywa"; GameOver = true; Przegrana(); } else { Komunikat = "Remis"; GameOver = true; Remis(); };
                         }
                     }
             }
@@ -132,6 +134,13 @@ namespace Kasyno.Classes
             while ((PunktyDealera < 16) && ((PunktyDealera < PunktyGracz) && (PunktyGracz <= 21))) { DealerDodajKarte(); LiczPunkty(); }
 
         }
+        public void Przegrana()
+        {
+            Zetony -= BetSize;
+        }
+        public void Remis() { }
+        public void Wygrana() { Zetony += BetSize; }
+
     }
 }
 
