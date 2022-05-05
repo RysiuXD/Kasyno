@@ -36,5 +36,17 @@ namespace Kasyno.Controllers
             return View("BlackJackGame", BlackJackGame);
         }
 
+        public IActionResult BetRise()
+        {
+            BlackJackGame.RiseBet();
+            return View("BlackJackGame", BlackJackGame);
+        }
+
+        public IActionResult BetLower()
+        {
+            BlackJackGame.LowerBet();
+            return View("BlackJackGame", BlackJackGame);
+        }
+
     }
 }

@@ -44,7 +44,6 @@ namespace Kasyno.Classes
             Komunikat = "Dealer dobiera do 16";
             GameOver = false;
             FirstAction = true;
-            BetSize = 10;
             ZbierzKarty();
             DealerDodajKarte();
             DealerDodajKarte();
@@ -142,7 +141,7 @@ namespace Kasyno.Classes
             if (FirstAction)
             {
                 FirstAction = false;
-                if (Zetony >= (2 * BetSize)) { BetSize = (BetSize * 2); PlayerDodajKarte(); PlayerStays(); }
+                if (Zetony >= (2 * BetSize)) { BetSize = (BetSize * 2); PlayerDodajKarte(); PlayerStays(); BetSize = (BetSize / 2); }
                 else { Komunikat = "Masz zbyt mało żetonów!"; }
 
             }
@@ -165,6 +164,10 @@ namespace Kasyno.Classes
         }
         public void Remis() { }
         public void Wygrana() { Zetony += BetSize; }
+
+
+        public void RiseBet() { if (GameOver) { if (Zetony > BetSize) { BetSize += 10; Komunikat = ""; } else { Komunikat = "Masz za mało żetonów by podnieść stawke"; } } else { Komunikat = "Kwote zakładu można zmienać tylko pomiędzy rozdaniami!"; } }
+        public void LowerBet() { if (GameOver) { if (BetSize >= 20) { BetSize -= 10; Komunikat = ""; } else { Komunikat = "10 to minimalna kwota zakładu"; } } else { Komunikat = "Kwote zakładu można zmienać tylko pomiędzy rozdaniami!"; } }
 
     }
 }
