@@ -35,6 +35,17 @@ namespace Kasyno.Controllers
             BlackJackGame.PlayerDoubleDown();
             return View("BlackJackGame", BlackJackGame);
         }
+        public IActionResult Split()
+        {
+            BlackJackGame.PlayerSplit();
+            return View("BlackJackGame", BlackJackGame);
+        }
+
+        public IActionResult ChangeHand()
+        {
+            BlackJackGame.ChangeHand();
+            return View("BlackJackGame", BlackJackGame);
+        }
 
         public IActionResult BetRise()
         {

@@ -7,20 +7,23 @@ namespace Kasyno.Classes
 {
     public class BlackJackGame
     {
-        public List<Karta> PlayerHand, DealerHand;
+        public List<Karta> PlayerHand, DealerHand, SplitHand;
         public Talia Talia;
         public int PunktyGracz, PunktyDealera, Zetony, BetSize;
         public string Komunikat;
-        public bool GameOver, FirstAction;
+        public bool GameOver, FirstAction, PlayerSplited, SplitGameOver;
 
         public BlackJackGame() 
         {
             Komunikat = "Dealer dobiera do 16.";
             PlayerHand = new List<Karta>();
             DealerHand = new List<Karta>();
+            SplitHand = new List<Karta>();
             Talia = new Talia();
             Talia.Tasuj();
             GameOver = false;
+            PlayerSplited = false;
+            SplitGameOver = true;
             FirstAction = true;
             Zetony = 200;
             BetSize = 10;
@@ -41,16 +44,22 @@ namespace Kasyno.Classes
 
         public void Rozdanie()
         {
-            Komunikat = "Dealer dobiera do 16";
-            GameOver = false;
-            FirstAction = true;
-            ZbierzKarty();
-            DealerDodajKarte();
-            DealerDodajKarte();
-            PlayerDodajKarte();
-            PlayerDodajKarte();
-            LiczPunkty();
-            BlackJackCheck();
+            if (Zetony >= BetSize)
+            {
+                Komunikat = "Dealer dobiera do 16";
+                GameOver = false;
+                FirstAction = true;
+                PlayerSplited = false;
+                ZbierzKarty();
+                DealerDodajKarte();
+                DealerDodajKarte();
+                PlayerDodajKarte();
+                PlayerDodajKarte();
+                LiczPunkty();
+                BlackJackCheck();
+            }
+            else 
+            { Komunikat = "Masz zbyt mało żetonów"; }
         }
 
 
@@ -66,6 +75,12 @@ namespace Kasyno.Classes
                 Talia.Karty.Add(karta);
             }
             DealerHand.Clear();
+            foreach (Karta karta in SplitHand)
+            {
+                Talia.Karty.Add(karta);
+            }
+            SplitHand.Clear();
+            
         }
 
         public void LiczPunkty() 
@@ -102,18 +117,17 @@ namespace Kasyno.Classes
 
         public void GameOutcome()
         {
-            GameOver = true;
             LiczPunkty();
-            if (PunktyGracz > 21) { Komunikat="Gracz Przegrywa";  GameOver = true; Przegrana(); }
+            if (PunktyGracz > 21) { Przegrana(); }
             else
             {
-                if(PunktyDealera > 21) { Komunikat = "Gracz Wygrywa"; GameOver = true;  Wygrana(); }
+                if(PunktyDealera > 21) { Wygrana(); }
                     else
                     {
-                        if (PunktyDealera < PunktyGracz) { Komunikat = "Gracz Wygrywa"; GameOver = true; Wygrana(); }
+                        if (PunktyDealera < PunktyGracz) { Wygrana(); }
                         else
                         {
-                            if (PunktyGracz < PunktyDealera) { Komunikat = "Gracz Pzegrywa"; GameOver = true; Przegrana(); } else { Komunikat = "Remis"; GameOver = true; Remis(); };
+                            if (PunktyGracz < PunktyDealera) { Przegrana(); } else { ; Remis(); };
                         }
                     }
             }
@@ -124,13 +138,13 @@ namespace Kasyno.Classes
             FirstAction = false;
             PlayerDodajKarte();
             LiczPunkty();
-            if (PunktyGracz > 21) GameOutcome();
+            if (PunktyGracz > 21 && !PlayerSplited) { GameOutcome(); }
+            if (PunktyGracz > 21 && PlayerSplited) { ChangeHand(); SplitGameOver = true; Komunikat = $"Przegrałeś {BetSize} zetonow w jednej ręce"; }
         }
 
         public void PlayerStays()
         {
             FirstAction = false;
-            GameOver = true;
             DealerLogic();
             GameOutcome();
         }
@@ -148,6 +162,48 @@ namespace Kasyno.Classes
             else { Komunikat = "DoubleDown moze zostac wykonany tylko na początku gry!"; }
         }
 
+
+        public void PlayerSplit()
+        {
+            
+            if (Zetony < (BetSize * 2)) { Komunikat = "Masz zbyt mało żetonów na Split!"; }
+            else
+            {
+                if (PlayerHand[0].Wartosc != PlayerHand[1].Wartosc) { Komunikat = "Nie masz odpowiednich kart na Split!"; }
+                else
+                {
+                    FirstAction = false;
+                    PlayerSplited = true;
+                    SplitGameOver = false;
+                    var cardHolder = PlayerHand[1];
+                    PlayerHand.Remove(cardHolder);
+                    SplitHand.Add(cardHolder);
+                    cardHolder = Talia.Karty.First();
+                    PlayerHand.Add(cardHolder);
+                    Talia.Karty.Remove(cardHolder);
+                    cardHolder = Talia.Karty.First();
+                    SplitHand.Add(cardHolder);
+                    Talia.Karty.Remove(cardHolder);
+                }
+            }
+        }
+
+        public void ChangeHand()
+        {
+            if (PlayerSplited)
+            {
+                if (!SplitGameOver)
+                {
+                    var temphand = new List<Karta>();
+                    temphand = PlayerHand;
+                    PlayerHand = SplitHand;
+                    SplitHand = temphand;
+                }
+                else 
+                { Komunikat = "Druga ręka została już rozegrana"; }
+            }
+        }
+
         public void BlackJackCheck()
         {
             if (FirstAction&&PunktyGracz==21){ Komunikat = $"Masz BlackJack-a Wygrałeś {((BetSize / 2) * 3)} żetonów!"; Zetony += ((BetSize / 2) * 3); GameOver = true; }
@@ -155,15 +211,70 @@ namespace Kasyno.Classes
 
         public void DealerLogic()
         {
+            LiczPunkty();
             while ((PunktyDealera < 16) && ((PunktyDealera < PunktyGracz) && (PunktyGracz <= 21))) { DealerDodajKarte(); LiczPunkty(); }
 
         }
         public void Przegrana()
         {
-            Zetony -= BetSize;
+            if (!PlayerSplited)
+            {
+                Komunikat = $"Gracz Przegrywa {BetSize} zetonów";
+                Zetony -= BetSize;
+                GameOver = true;
+            }
+            else
+            { 
+                if (SplitGameOver)
+                {
+                    Komunikat += $"\n Druga Ręka: Przegrałeś  {BetSize} żetonów!"; Zetony -= BetSize; GameOver = true;
+                }
+                else
+                {
+                    Komunikat = $"\n Pierwsza Ręka: Przegrałeś  {BetSize} żetonów!"; Zetony -= BetSize; ChangeHand(); SplitGameOver = true; GameOutcome();
+                }
+            }
+            
         }
-        public void Remis() { }
-        public void Wygrana() { Zetony += BetSize; }
+        public void Remis()
+        {
+            if (!PlayerSplited)
+            {
+                Komunikat = "Remis";
+                GameOver = true;
+            }
+            else
+            {
+                if (SplitGameOver)
+                {
+                    Komunikat += $"\n Druga Ręka: Remis"; GameOver = true;
+                }
+                else
+                {
+                    Komunikat = $"\n Pierwsza Ręka: Remis "; ChangeHand(); SplitGameOver = true; GameOutcome();
+                }
+            }
+        }
+        public void Wygrana() 
+        {
+            if (!PlayerSplited)
+            {
+                Komunikat = $"Gracz Wygrywa {BetSize} zetonów";
+                Zetony += BetSize;
+                GameOver = true;
+            }
+            else
+            {
+                if (SplitGameOver)
+                {
+                    Komunikat += $"\n Druga Ręka: Wygrwya {BetSize} żetonów!"; Zetony += BetSize; GameOver = true;
+                }
+                else
+                {
+                    Komunikat = $"\n Pierwsza Ręka: Wygrywa  {BetSize} żetonów!"; Zetony += BetSize; ChangeHand(); SplitGameOver = true; GameOutcome();
+                }
+            }
+        }
 
 
         public void RiseBet() { if (GameOver) { if (Zetony > BetSize) { BetSize += 10; Komunikat = ""; } else { Komunikat = "Masz za mało żetonów by podnieść stawke"; } } else { Komunikat = "Kwote zakładu można zmienać tylko pomiędzy rozdaniami!"; } }

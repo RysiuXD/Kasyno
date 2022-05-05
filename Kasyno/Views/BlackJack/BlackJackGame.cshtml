@@ -6,7 +6,7 @@
 }
 
 <div class="container-fluid">
-    <div  class="row">>
+    <div  class="row">
         <h1> reka dealera</h1>
     <div class="d-flex justify-content-end border border-dark justify-content-center">
          @if (!Model.GameOver)
@@ -39,22 +39,36 @@
         </div>
     </div>
     <br />
-      <div  class="row">>
-        <h1> reka gracza</h1>
-    <div class="d-flex justify-content-end border border-dark justify-content-center">
-
+     <div  class="row">
+        <h1> Ręka gracza</h1>
+        <div class="d-flex justify-content-end border border-dark justify-content-center"> 
         @foreach (Karta karta in Model.PlayerHand)
         {
             <div class="d-inline-flex p-2 bg-light border border-dark">
                 <h1 style="color:@karta.TxtColor"> @karta.GetFace() </h1>
             </div>
         }
-    </div>
-      </div>
+        </div>
+     </div>
+     <div  class="row">
+          @if(Model.PlayerSplited)
+          {
+            <h3> Druga ręka</h3>
+            <div class="d-flex justify-content-end border border-dark justify-content-center">
+                @foreach (Karta karta in Model.SplitHand)
+                {
+                <div class="d-inline-flex p-2 bg-light border border-dark">
+                <h1 style="color:@karta.TxtColor"> @karta.GetFace() </h1>
+                </div> 
+                }
+            </div>
+        }
+        
+          </div>
       <br />
     @if (!Model.GameOver)
     {
-    <div class="row">
+        <div class="row">
             <div class="col">
                 <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="HIT">Hit</a></button>
             </div>
@@ -64,7 +78,19 @@
             <div class="col">
                 <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="DoubleDown">DoubleDown</a></button>
             </div>
-      </div>       
+             @if (Model.PlayerSplited && !Model.SplitGameOver)
+             {
+                <div class="col">
+                    <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="ChangeHand">ZmienReke</a></button>
+                </div>
+             }
+            else
+                {
+                <div class="col">
+                    <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="Split">Split</a></button>
+                </div>
+                }
+         </div>       
     }
     else
     {
