@@ -1,0 +1,21 @@
+﻿@using Kasyno.Classes
+@model Kasyno.Classes.SlotMachine;
+
+@{
+    ViewData["Title"] = "Game";
+}
+
+<div class="container-fluid">
+    <div  class="row">
+        <h1>Slot Machine</h1>
+    <div class="d-flex justify-content-end border border-dark justify-content-center">
+
+        @foreach (var item in @Model.Wylosowane)
+            {
+                <p> @item </p>   
+            }    
+
+
+        </div>
+    </div>
+</div>
