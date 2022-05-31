@@ -1,5 +1,6 @@
 ﻿@using Kasyno.Classes
 @model Kasyno.Classes.SlotMachine;
+using Kasyno.Classes;
 
 @{
     ViewData["Title"] = "Game";
@@ -18,4 +19,36 @@
 
         </div>
     </div>
+
+
+     @if (!Model.GameOver)
+    {
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="HIT">Hit</a></button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="Stay">Stay</a></button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="DoubleDown">DoubleDown</a></button>
+            </div>
+         </div>       
+    }
+    else
+    {
+     <div class="row">
+      <button type="button" class="btn btn-secondary btn-block">
+         <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="Index">Nowe Rozdanie</a>
+      </button>
+     </div>
+     <br/>
+      <div class="row">
+            <div class="col"> <button type="button" class="btn btn-secondary btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="BetLower">Lower Bet</a></button>    </div>
+            <div class="col"> <div class="row"> Kwota zakładu: @Model.BetSize Twoje żetony: @Model.Zetony  </div> <div class="row"> @Model.Komunikat </div> </div>
+            <div class="col">  <button type="button" class="btn btn-secondary align-items-center btn-block"> <a class="nav-link text-white" asp-area="" asp-controller="BlackJack" asp-action="BetRise">Rise Bet</a></button>    </div>
+        </div>
+    }
+
+
 </div>
